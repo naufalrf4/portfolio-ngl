@@ -1,4 +1,6 @@
 name = "naufalrf-ngl"
+compatibility_date = "2026-10-30"
+compatibility_flags = ["nodejs_compat", "url_standard"]
 pages_build_output_dir = ".svelte-kit/cloudflare"
 [vars]
 ADMIN_API_URL = "https://admin.naufalrf.net"
@@ -9,5 +11,3 @@ PUBLIC_CURSOR_WS_URL = "wss://presence.naufalrf.net/ws"
 ADMIN_API_URL = "https://admin.naufalrf.net"
 BUN_VERSION = "1.4.3"
 PUBLIC_CURSOR_WS_URL = "wss://presence.naufalrf.net/ws"
-compatibility_date = "2026-10-30"
-compatibility_flags = ["nodejs_compat"]
