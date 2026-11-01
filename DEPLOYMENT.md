@@ -9,7 +9,7 @@ This repository is deployed as a standalone Cloudflare Pages project for `ngl.na
 - Bun version: `BUN_VERSION=1.4.3` is pinned in `wrangler.toml`; `packageManager` is also pinned in `package.json`.
 - Wrangler project: `naufalrf-ngl` (`wrangler.toml`)
 
-Non-secret values in `wrangler.toml` are the source of truth for both Preview and Production. `keep_vars = true` preserves additional dashboard secrets. Set `ADMIN_INTERNAL_API_TOKEN` as a Pages secret and `PUBLIC_TURNSTILE_SITE_KEY` to the public widget key; never commit either value.
+Non-secret values in `wrangler.toml` are the source of truth for both Preview and Production. Set `ADMIN_INTERNAL_API_TOKEN` as a Pages secret and `PUBLIC_TURNSTILE_SITE_KEY` to the public widget key; never commit either value.
 
 Set these for both Preview and Production, using the correct URL for each environment:
 

@@ -1,7 +1,5 @@
 name = "naufalrf-ngl"
 pages_build_output_dir = ".svelte-kit/cloudflare"
-keep_vars = true
-
 [vars]
 ADMIN_API_URL = "https://admin.naufalrf.net"
 BUN_VERSION = "1.4.3"
