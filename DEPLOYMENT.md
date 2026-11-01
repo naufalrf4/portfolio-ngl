@@ -9,6 +9,8 @@ This repository is deployed as a standalone Cloudflare Pages project for `ngl.na
 - Bun version: `BUN_VERSION=1.4.3` is pinned in `wrangler.toml`; `packageManager` is also pinned in `package.json`.
 - Wrangler project: `naufalrf-ngl` (`wrangler.toml`)
 
+`CF_PAGES=1` selects the Cloudflare adapter. Without that Pages build variable, the app selects SvelteKit's Node adapter for the parent repository's VPS rollback Compose service. The included `Dockerfile` expects the parent repository as its build context; build it through the root Compose file, not from this repo directory.
+
 Non-secret values in `wrangler.toml` are the source of truth for both Preview and Production. Set `ADMIN_INTERNAL_API_TOKEN` as a Pages secret and `PUBLIC_TURNSTILE_SITE_KEY` to the public widget key; never commit either value.
 
 Set these for both Preview and Production, using the correct URL for each environment:
