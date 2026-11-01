@@ -77,4 +77,4 @@ Authoritative AI control contract for this repository.
 - NGL first-party analytics now proxy through `src/routes/api/analytics/+server.ts`; keep pageview/submission telemetry same-origin and separate from GA snippets.
 - Keep the Presence websocket endpoint in `PUBLIC_CURSOR_WS_URL` and derive its CSP `connect-src` origins from that same runtime public setting; do not hardcode the production hostname, because Pages previews can use another Presence endpoint.
 - `static/llms.txt` should follow the canonical section structure from `apps/public-astro/public/llms.txt`, but its content must stay specific to the anonymous-message surface rather than duplicating the full portfolio narrative.
-- `svelte.config.js` selects Cloudflare only when `CF_PAGES=1`; normal builds use `@sveltejs/adapter-node` for the parent's VPS rollback service. `Dockerfile` is parent-context-only and is built through root Compose.
+- `svelte.config.js` selects Cloudflare only when `CF_PAGES=1`; normal builds use `@sveltejs/adapter-node` for the parent's VPS rollback service. `Dockerfile` builds this repo independently for the VPS fallback runtime.
