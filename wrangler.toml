@@ -10,9 +10,9 @@ compatibility_flags = ["nodejs_compat", "url_standard"]
 [vars]
 ADMIN_API_URL = "https://admin.naufalrf.net"
 BUN_VERSION = "1.4.3"
-PUBLIC_CURSOR_WS_URL = "wss://presence.naufalrf.net/ws"
+PUBLIC_CURSOR_WS_URL = "wss://admin.naufalrf.net/presence/ws"
 
 [env.preview.vars]
 ADMIN_API_URL = "https://admin.naufalrf.net"
 BUN_VERSION = "1.4.3"
-PUBLIC_CURSOR_WS_URL = "wss://presence.naufalrf.net/ws"
+PUBLIC_CURSOR_WS_URL = "wss://admin.naufalrf.net/presence/ws"
