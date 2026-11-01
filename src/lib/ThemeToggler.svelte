@@ -1,5 +1,4 @@
 <script lang="ts">
-
 	const THEME_KEY = 'theme';
 	const DURATION = 550;
 
@@ -26,8 +25,7 @@
 		isDark = next === 'dark';
 		try {
 			localStorage.setItem(THEME_KEY, next);
-		} catch {
-		}
+		} catch {}
 	}
 
 	function toggleTheme() {

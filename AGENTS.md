@@ -45,24 +45,24 @@ Authoritative AI control contract for this repository.
 - **Auto-Push:** forbidden unless the user explicitly asks
 - **Push Identity:** use only the user's identity
 - **Co-Authors:** forbidden unless the user explicitly asks otherwise
-- **Ignored Local Agent Artifacts:** inherit `../../AGENTS.md`
+- **Ignored Local Agent Artifacts:** inherit the root policy when checked out in the monorepo; standalone checkout should ignore local `.agents/`, `.agent-workspace/`, `.agent-review/`, `.evals/`, `.reviews/`, and `.opencode/` artifacts.
 
 ## 6. Agent Behavior
 
-- Read this file, `../../AGENTS.md`, `../../PROGRESS.md`, `../../.context/ui-design/legacy-phase2-baseline.md`, and relevant `../../.context/base/*` files before planning or coding.
+- Read this file first. When checked out in the monorepo, also read `../../AGENTS.md`, `../../PROGRESS.md`, and relevant design/context files. In the standalone repo, use this file and `DEPLOYMENT.md`; parent-relative files are not present.
 - Do not guess missing API, CAPTCHA, or design rules that are not evidenced in repo files.
 - Keep changes scoped to this app unless an Admin contract or shared rule explicitly requires a cross-app update.
 - Preserve existing behavior unless the user asks for a change or a documented contradiction must be repaired.
-- Update `../../.context/` and this file when a task reveals durable NGL-specific knowledge.
-- Append a factual entry to `../../PROGRESS.md` after meaningful milestones, decisions, or discoveries.
+- Update shared `../../.context/` when present, and this file when a task reveals durable NGL-specific knowledge.
+- Append a factual entry to `../../PROGRESS.md` when present; standalone milestones belong in the relevant repo documentation.
 - Do not add co-author trailers, assistant attribution, or alternate authorship metadata on the user's behalf.
 - Run `bun run check`, `bun run lint`, and `bun run build` after meaningful code changes.
 
 ## 7. Authority Order
 
 1. this file
-2. `../../AGENTS.md`
-3. `../../.context/`
+2. Root `AGENTS.md` when this app is checked out in the monorepo
+3. Shared `.context/` when present
 4. explicit user instruction that does not contradict verified project truth
 5. repository code, manifests, env examples, and configs in this app
 
@@ -75,4 +75,5 @@ Authoritative AI control contract for this repository.
 - Use SvelteKit public env access (`$env/dynamic/public`) for public browser-exposed runtime config like Turnstile and GA in this app; `import.meta.env` is not reliable here for the current setup.
 - NGL Turnstile stays visually hidden until the message field has content; when configured, avoid pre-typing helper copy and reveal the challenge only after user input starts.
 - NGL first-party analytics now proxy through `src/routes/api/analytics/+server.ts`; keep pageview/submission telemetry same-origin and separate from GA snippets.
+- Keep the Presence websocket endpoint in `PUBLIC_CURSOR_WS_URL` and derive its CSP `connect-src` origins from that same runtime public setting; do not hardcode the production hostname, because Pages previews can use another Presence endpoint.
 - `static/llms.txt` should follow the canonical section structure from `apps/public-astro/public/llms.txt`, but its content must stay specific to the anonymous-message surface rather than duplicating the full portfolio narrative.

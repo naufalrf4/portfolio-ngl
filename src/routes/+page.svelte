@@ -291,7 +291,8 @@
 							stroke-width="2"
 							stroke-linecap="round"
 							stroke-linejoin="round"
-							class="text-[var(--tone-accent)]"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg
+							class="text-[var(--tone-accent)]"
+							><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg
 						>
 					</div>
 					<p

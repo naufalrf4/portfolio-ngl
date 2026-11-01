@@ -10,3 +10,7 @@ bun.lockb
 
 # Local agent state
 .omc/
+
+# Standalone workspace copies are source snapshots, not this app's lint targets
+/packages/
+/DEPLOYMENT.md
