@@ -9,6 +9,9 @@
 		id: string;
 		name: string;
 		color: string;
+		x: number;
+		y: number;
+		isTouching: boolean;
 		pageLabel: string;
 		sectionLabel: string | null;
 	};
@@ -23,12 +26,17 @@
 
 	let status: Status = 'disconnected';
 	let participants: PresenceParticipant[] = [];
+	let documentWidth = 0;
+	let documentHeight = 0;
+	let scrollX = 0;
+	let scrollY = 0;
 	let selfId: string | null = null;
 	let isOpen = false;
 	let socket: WebSocket | null = null;
 	let heartbeatId: ReturnType<typeof setInterval> | null = null;
 	let reconnectId: ReturnType<typeof setTimeout> | null = null;
 	let shouldReconnect = false;
+	let lastMoveAt = 0;
 
 	function getSocketUrl(url: string) {
 		return url.trim() || 'ws://localhost:3006/ws';
@@ -180,12 +188,62 @@
 		});
 	}
 
+	function updateMetrics() {
+		documentWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth, window.innerWidth);
+		documentHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight, window.innerHeight);
+		scrollX = window.scrollX;
+		scrollY = window.scrollY;
+	}
+
+	function sendMove(clientX: number, clientY: number, isTouching: boolean) {
+		if (!socket || socket.readyState !== WebSocket.OPEN) return;
+		const now = performance.now();
+		if (now - lastMoveAt < 60) return;
+		lastMoveAt = now;
+		const width = Math.max(document.documentElement.scrollWidth, window.innerWidth);
+		const height = Math.max(document.documentElement.scrollHeight, window.innerHeight);
+		socket.send(JSON.stringify({
+			type: 'move',
+			payload: {
+				x: Math.min(1, Math.max(0, (clientX + window.scrollX) / width)),
+				y: Math.min(1, Math.max(0, (clientY + window.scrollY) / height)),
+				isTouching,
+				sectionId: null,
+				sectionLabel: null
+			}
+		}));
+	}
+
+	function handlePointerMove(event: PointerEvent) {
+		sendMove(event.clientX, event.clientY, event.pointerType !== 'mouse');
+	}
+
+	function handlePointerDown(event: PointerEvent) {
+		sendMove(event.clientX, event.clientY, event.pointerType !== 'mouse');
+	}
+
+	function handleTouchMove(event: TouchEvent) {
+		const touch = event.touches[0];
+		if (touch) sendMove(touch.clientX, touch.clientY, true);
+	}
+
 	onMount(() => {
+		updateMetrics();
+		window.addEventListener('resize', updateMetrics, { passive: true });
+		window.addEventListener('scroll', updateMetrics, { passive: true });
+		window.addEventListener('pointermove', handlePointerMove, { passive: true });
+		window.addEventListener('pointerdown', handlePointerDown, { passive: true });
+		window.addEventListener('touchmove', handleTouchMove, { passive: true });
 		void connect();
 
 		return () => {
 			shouldReconnect = false;
 			clearTimers();
+			window.removeEventListener('resize', updateMetrics);
+			window.removeEventListener('scroll', updateMetrics);
+			window.removeEventListener('pointermove', handlePointerMove);
+			window.removeEventListener('pointerdown', handlePointerDown);
+			window.removeEventListener('touchmove', handleTouchMove);
 			if (socket?.readyState === WebSocket.OPEN) {
 				socket.send(JSON.stringify({ type: 'leave' }));
 			}
@@ -193,6 +251,26 @@
 		};
 	});
 </script>
+
+<div class="pointer-events-none fixed inset-0 z-[45] overflow-hidden" aria-hidden="true">
+	{#each participants as participant (participant.id)}
+		<div
+			class="absolute left-0 top-0 transition-transform duration-75 ease-out"
+			style={`transform:translate3d(${participant.x * Math.max(documentWidth, 1) - scrollX}px,${participant.y * Math.max(documentHeight, 1) - scrollY}px,0)`}
+		>
+			<div class="relative -translate-x-1/2 -translate-y-1/2">
+				<span class="absolute -inset-2 rounded-full blur-md" style={`background:${participant.color};opacity:0.32`}></span>
+				<svg class="relative h-6 w-6 drop-shadow" viewBox="0 0 24 24" aria-hidden="true">
+					<path d="M12 2 L14.3 9.7 L22 12 L14.3 14.3 L12 22 L9.7 14.3 L2 12 L9.7 9.7 Z" fill={participant.color}></path>
+					<circle cx="12" cy="12" r="1.6" fill="white"></circle>
+				</svg>
+				<span class="ml-4 whitespace-nowrap rounded-full border bg-[var(--bg-card)] px-2 py-1 text-[10px] font-semibold text-[var(--text-primary)] shadow" style={`border-color:${participant.color}`}>
+					{participant.name}
+				</span>
+			</div>
+		</div>
+	{/each}
+</div>
 
 <div
 	class="fixed right-4 top-5 z-[52] flex justify-end px-4 md:right-6 md:top-6 md:px-0 lg:left-6 lg:right-auto lg:top-auto lg:bottom-8"
